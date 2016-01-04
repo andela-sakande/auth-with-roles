@@ -25,6 +25,10 @@ Route::get('/', function () {
 Route::get('/auth/login', function() {
     return view('auth/login');
 });
+
+Route::get('/auth/register', function() {
+    return view('auth/register');
+});
 /*
 |--------------------------------------------------------------------------
 | Application Routes

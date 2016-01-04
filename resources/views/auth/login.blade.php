@@ -25,7 +25,7 @@
             </label>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <p><a href="#">Forgot password?</a></p>
+        <p><a href="/auth/password">Forgot password?</a></p>
 
         <p class="or-social">Or Use Social Login</p>
 

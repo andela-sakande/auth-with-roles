@@ -43,11 +43,11 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="#">Home</a></li>
+                <li><a href="/">Home</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="/auth/login">Login</a></li>
-                <li><a href="#">Register</a></li>
+                <li><a href="/auth/register">Register</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

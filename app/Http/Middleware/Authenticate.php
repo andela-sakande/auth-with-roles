@@ -15,14 +15,23 @@ class Authenticate
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next, $role)
     {
-        if (Auth::guard($guard)->guest()) {
-            if ($request->ajax()) {
-                return response('Unauthorized.', 401);
-            } else {
-                return redirect()->guest('login');
-            }
+        if(!$this->auth->check())
+        {
+            return redirect()->route('auth.login')
+                ->with('status', 'success')
+                ->with('message', 'Please login.');
+        }
+
+        if($role == 'all')
+        {
+            return $next($request);
+        }
+
+        if( $this->auth->guest() || !$this->auth->user()->hasRole($role))
+        {
+            abort(403);
         }
 
         return $next($request);

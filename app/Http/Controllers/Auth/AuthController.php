@@ -2,71 +2,61 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
-use Validator;
+use App\Models\Role;
+use App\Models\User;
+use App\Http\Requests;
+use Input, Validator, Auth;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Registration & Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users, as well as the
-    | authentication of existing users. By default, this controller uses
-    | a simple trait to add these behaviors. Why don't you explore it?
-    |
-    */
+    protected $auth;
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
-
-    /**
-     * Where to redirect users after login / registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/';
-
-    /**
-     * Create a new authentication controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function getLogin()
     {
-        $this->middleware('guest', ['except' => 'logout']);
+        return view('auth.login');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
+    public function postLogin()
     {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]);
+        $email      = Input::get('email');
+        $password   = Input::get('password');
+        $remember   = Input::get('remember');
+
+        if($this->auth->attempt([
+            'email'     => $email,
+            'password'  => $password
+        ], $remember == 1 ? true : false))
+        {
+            if( $this->auth->user()->hasRole('user'))
+            {
+                return redirect()->route('user.home');
+            }
+
+            if( $this->auth->user()->hasRole('administrator'))
+            {
+                return redirect()->route('admin.home');
+            }
+
+        }
+        else
+        {
+            return redirect()->back()
+                ->with('message','Incorrect email or password')
+                ->with('status', 'danger')
+                ->withInput();
+        }
+
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
-     */
-    protected function create(array $data)
+    public function getLogout()
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        Auth::logout();
+
+        return redirect()->route('auth.login')
+            ->with('status', 'success')
+            ->with('message', 'Logged out');
+
     }
 }

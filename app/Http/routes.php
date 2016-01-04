@@ -22,13 +22,13 @@ Route::get('/', function () {
 |
 | This are routes responsible for all authentications
  */
-Route::get('/auth/login', function() {
-    return view('auth/login');
-});
+// Route::get('/auth/login', function() {
+//     return view('auth/login');
+// });
 
-Route::get('/auth/register', function() {
-    return view('auth/register');
-});
+// Route::get('/auth/register', function() {
+//     return view('auth/register');
+// });
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -40,6 +40,28 @@ Route::get('/auth/register', function() {
 |
 */
 
-Route::group(['middleware' => ['web']], function () {
-    //
+$s = 'public.';
+Route::get('/',         ['as' => $s . 'home',   'uses' => 'PagesController@getHome']);
+
+$a = 'auth.';
+Route::get('/login',            ['as' => $a . 'login',          'uses' => 'Auth\AuthController@getLogin']);
+Route::post('/login',           ['as' => $a . 'login-post',     'uses' => 'Auth\AuthController@postLogin']);
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:administrator'], function()
+{
+    $a = 'admin.';
+    Route::get('/', ['as' => $a . 'home', 'uses' => 'AdminController@getHome']);
 });
+
+Route::group(['prefix' => 'user', 'middleware' => 'auth:user'], function()
+{
+    $a = 'user.';
+    Route::get('/', ['as' => $a . 'home', 'uses' => 'UserController@getHome']);
+});
+
+Route::group(['middleware' => 'auth:all'], function()
+{
+    $a = 'authenticated.';
+    Route::get('/logout', ['as' => $a . 'logout', 'uses' => 'Auth\AuthController@getLogout']);
+});
+

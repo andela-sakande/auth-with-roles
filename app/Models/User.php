@@ -31,9 +31,10 @@ class User extends Authenticatable
 
     public function hasRole($name)
     {
-        foreach($this->roles as $role)
-        {
-            if($role->name == $name) return true;
+        foreach ($this->roles as $role) {
+            if ($role->name == $name) {
+                return true;
+            }
         }
 
         return false;
@@ -48,4 +49,22 @@ class User extends Authenticatable
     {
         return $this->roles()->detach($role);
     }
+
+    public static $rules = [
+        'first_name'            => 'required',
+        'last_name'             => 'required',
+        'email'                 => 'required|email|unique:users',
+        'password'              => 'required|min:6|max:20',
+        'password_confirmation' => 'required|same:password'
+    ];
+
+    public static $messages = [
+        'first_name.required'   => 'First Name is required',
+        'last_name.required'    => 'Last Name is required',
+        'email.required'        => 'Email is required',
+        'email.email'           => 'Email is invalid',
+        'password.required'     => 'Password is required',
+        'password.min'          => 'Password needs to have at least 6 characters',
+        'password.max'          => 'Password maximum length is 20 characters'
+    ];
 }

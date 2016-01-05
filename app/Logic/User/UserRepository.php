@@ -3,8 +3,11 @@
 namespace App\Logic\User;
 
 use Hash;
+use Carbon\Carbon;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Password;
+use App\Logic\Mailers\UserMailer;
 
 class UserRepository
 {
@@ -23,5 +26,24 @@ class UserRepository
         $role = Role::whereName('user')->first();
         $user->assignRole($role);
 
+    }
+
+    public function resetPassword( User $user  )
+    {
+        $token = sha1(mt_rand());
+        $password = new Password;
+        $password->email = $user->email;
+        $password->token = $token;
+        $password->created_at = Carbon::now();
+        $password->save();
+
+        $data = [
+            'first_name'    => $user->first_name,
+            'token'         => $token,
+            'subject'       => 'Example.com: Password Reset Link',
+            'email'         => $user->email
+        ];
+
+        $this->userMailer->passwordReset($user->email, $data);
     }
 }

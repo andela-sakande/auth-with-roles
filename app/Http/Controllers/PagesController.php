@@ -9,5 +9,8 @@ use App\Http\Controllers\Controller;
 
 class PagesController extends Controller
 {
-    //
+    public function getHome()
+    {
+        return view('pages.home');
+    }
 }

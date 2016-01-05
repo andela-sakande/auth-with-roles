@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('layouts.main');
-});
+// Route::get('/', function () {
+//     return view('layouts.main');
+// });
 
 /*
 |-------------------------------------------------------------------------
@@ -46,6 +46,9 @@ Route::get('/',         ['as' => $s . 'home',   'uses' => 'PagesController@getHo
 $a = 'auth.';
 Route::get('/login',            ['as' => $a . 'login',          'uses' => 'Auth\AuthController@getLogin']);
 Route::post('/login',           ['as' => $a . 'login-post',     'uses' => 'Auth\AuthController@postLogin']);
+Route::get('/register',         ['as' => $a . 'register',       'uses' => 'Auth\AuthController@getRegister']);
+Route::post('/register',        ['as' => $a . 'register-post',  'uses' => 'Auth\AuthController@postRegister']);
+
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:administrator'], function()
 {

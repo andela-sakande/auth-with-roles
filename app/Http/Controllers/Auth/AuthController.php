@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use Auth;
-use Input;
 use Validator;
 use App\Models\Role;
 use App\Models\User;
@@ -12,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Logic\User\UserRepository;
 use Illuminate\Contracts\Auth\Guard;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Input;
 
 class AuthController extends Controller
 {

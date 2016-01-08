@@ -39,15 +39,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Social Authentication</a>
+            <a class="navbar-brand" href="#">Social Authentication</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
+                <li><a href="{{ route('public.home')  }}">Home</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/auth/login">Login</a></li>
-                <li><a href="/auth/register">Register</a></li>
+                @if(!Auth::check())
+                <li><a href="{{ route('auth.login') }}">Login</a></li>
+                <li><a href="{{ route('auth.register') }}">Register</a></li>
+                @else
+                <li><a href="#">{{ Auth::user()->first_name }}</a></li>
+                <li><a href="{{ route('authenticated.logout') }}">Logout</a></li>
+                @endif
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -68,5 +73,7 @@
 {!! Html::script('/assets/plugins/bootstrap/js/bootstrap.min.js') !!}
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 {!! Html::script('/assets/js/ie10-viewport-bug-workaround.js') !!}
+
+@yield('footer');
 </body>
 </html>
